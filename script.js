@@ -234,19 +234,38 @@ window.addEventListener("resize", scaleStage);
 applyTheme(); applyRatio(); applyFonts(); scaleStage();
 loadAyat();
 
-function checkname() {
-    const getname = localStorage.getItem("name");
-    const popup = document.getElementById("popup");
-    if (getname) {
+const popup = document.getElementById("popup");
+const input = document.getElementById("name");
+
+function getName(){
+    return (localStorage.getItem("userName") || "").trim();
+}
+
+function checkName(){
+    if (getName()) {
         popup.style.display = "none";
+        document.title = getName();
     } else {
         popup.style.display = "flex";
-
+        input.focus();
     }
 }
-checkname()
-function savename() {
-    const name = document.getElementById("name").value;
-    localStorage.setItem("name", name);
-    document.getElementById("popup").style.display="none";
+
+function savename(){
+    const name = input.value.trim();
+
+    if (name.length < 2) {
+        input.classList.add("error");
+        input.placeholder = "নাম লিখো (কমপক্ষে ২ অক্ষর)";
+        input.focus();
+        return;
+    }
+
+    localStorage.setItem("userName", name);
+    location.reload();
 }
+
+input.addEventListener("input", () => input.classList.remove("error"));
+input.addEventListener("keydown", e => { if (e.key === "Enter") savename(); });
+
+checkName();
