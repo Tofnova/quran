@@ -44,38 +44,790 @@ button {
     font-size: 16px;
     cursor: pointer
 }
-nav{
+
+nav {
     height: auto;
-    background-color: #d5ffedfb;
+    background-color: #d5ffeda9;
     backdrop-filter: blur(5px);
     position: fixed;
     top: 0;
     width: 100%;
     height: 75px;
-box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    z-index: 990;
 }
-.flex{
+
+.flex {
     display: flex;
 }
-.medel{
+
+.medel {
     align-items: center;
 }
-.center{
+
+.center {
     justify-content: center;
 }
-.nav-logo{
-   width: 50%;
-   gap: 10px;
-   color: #1b6b4a;
+
+.nav-logo {
+    width: 50%;
+    gap: 10px;
+    color: #1b6b4a;
 }
-.nav-logo img{
+
+.nav-logo img {
     height: 60px;
     width: 60px;
     border-radius: 100px;
 }
-.beet{
+
+.beet {
     justify-content: space-between;
 }
-.around{
+
+.around {
     justify-content: space-around;
+}
+
+.container {
+    /* max-width: 760px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.container .stp{
+    width: 600px;
+}
+
+/* ---------- Controls ---------- */
+.panel {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 10px rgba(6, 78, 59, .08);
+}
+
+.panel h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #44614f
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center
+}
+
+.swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px #c5d3ca;
+    cursor: pointer;
+    padding: 0;
+}
+
+.swatch.active {
+    box-shadow: 0 0 0 3px #064e3b
+}
+
+.chip {
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid #c5d3ca;
+    background: #f6faf7;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    color: #12281f;
+}
+
+.chip.active {
+    background: #064e3b;
+    color: #fff;
+    border-color: #064e3b
+}
+
+select,
+input[type=number] {
+    font: inherit;
+    font-size: 14px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid #c5d3ca;
+    background: #f6faf7;
+    color: #12281f;
+}
+
+input[type=number] {
+    width: 96px;
+    text-align: center
+}
+
+.btn {
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    background: #075c46;
+}
+
+.btn.gold {
+    background: #b8902c
+}
+
+.btn.wa {
+    background: #1fa855
+}
+
+.btn.fb {
+    background: #1877f2
+}
+
+.btn.tg {
+    background: #229ed9
+}
+
+.btn.x {
+    background: #111
+}
+
+.btn.soft {
+    background: #e3ece6;
+    color: #12281f
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: wait
+}
+
+.btn i,
+.chip i,
+.panel h3 i {
+    margin-right: 8px
+}
+
+.panel h3 i {
+    color: #b8902c
+}
+
+#toast i {
+    margin-right: 8px;
+    color: #7be0a8
+}
+
+#toast.err i {
+    color: #ff8a80
+}
+
+.grow {
+    flex: 1;
+    min-width: 120px
+}
+
+/* ---------- Stage ---------- */
+.stageWrap {
+    position: relative;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .25)
+}
+
+/* ---------- Card (fixed 1080px wide; scaled to fit the screen) ---------- */
+#card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1080px;
+    height: 1080px;
+    transform-origin: top left;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    background: var(--bg);
+    font-family: "Noto Serif Bengali", "Hind Siliguri", serif;
+}
+
+#card .pattern {
+    position: absolute;
+    inset: 0
+}
+
+#card .wmBig {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1400px;
+    margin-left: -700px;
+    margin-top: -60px;
+    text-align: center;
+    font-family: Cinzel, serif;
+    font-size: 120px;
+    font-weight: 600;
+    color: var(--accent);
+    opacity: .06;
+    transform: rotate(-28deg);
+    white-space: nowrap;
+}
+
+#card .frame {
+    position: absolute;
+    inset: 26px;
+    border: 3px solid var(--accent);
+    border-radius: 6px
+}
+
+#card .frame2 {
+    position: absolute;
+    inset: 44px;
+    border: 1px solid var(--accent);
+    opacity: .45;
+    border-radius: 3px
+}
+
+#card .corner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    transform: rotate(45deg)
+}
+
+#card .c1 {
+    left: 17px;
+    top: 17px
+}
+
+#card .c2 {
+    right: 17px;
+    top: 17px
+}
+
+#card .c3 {
+    left: 17px;
+    bottom: 17px
+}
+
+#card .c4 {
+    right: 17px;
+    bottom: 17px
+}
+
+#card .inner {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 78px 96px 62px;
+}
+
+#bismillah {
+    font-family: Amiri, serif;
+    font-size: 40px;
+    color: var(--accent);
+    direction: rtl;
+    line-height: 1.5;
+    letter-spacing: 0;
+}
+
+#title {
+    font-size: 26px;
+    color: var(--sub);
+    margin-top: 2px;
+    font-weight: 600
+}
+
+.divider {
+    position: relative;
+    width: 340px;
+    height: 2px;
+    margin: 22px 0 4px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    flex: none;
+}
+
+.divider::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    background: var(--accent);
+    transform: rotate(45deg);
+}
+
+#body {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+#content {
+    width: 100%;
+    text-align: center
+}
+
+#arabic {
+    direction: rtl;
+    line-height: 1.95;
+    letter-spacing: 0;
+    font-weight: 700;
+    color: var(--text);
+    font-family: Amiri, serif;
+}
+
+.orn {
+    width: 90px;
+    height: 2px;
+    margin: 26px auto;
+    background: var(--accent);
+    opacity: .8;
+    position: relative;
+}
+
+#bangla {
+    line-height: 1.75;
+    color: var(--sub);
+    font-weight: 500
+}
+
+#ref {
+    flex: none;
+    margin-top: 18px;
+    padding: 10px 30px;
+    border: 2px solid var(--accent);
+    border-radius: 40px;
+    color: var(--accent);
+    font-size: 26px;
+    font-weight: 700;
+    background: var(--pill);
+}
+
+.foot {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    margin-top: 26px;
+}
+
+.foot .line {
+    flex: 1;
+    height: 1px;
+    background: var(--accent);
+    opacity: .55
+}
+
+.foot .wm {
+    font-family: Cinzel, serif;
+    font-size: 26px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+#error {
+    color: #b42318;
+    text-align: center;
+    font-size: 14px;
+    min-height: 18px;
+    margin: 4px 0
+}
+
+#toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: #12281f;
+    color: #fff;
+    padding: 11px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s;
+    z-index: 9;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0)
+}
+/* ===== নতুন CSS — এটুকু আপনার style.css এর নিচে পেস্ট করুন ===== */
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+/* নেভবার */
+a.nav-logo {
+    text-decoration: none;
+}
+
+.nav-btn {
+    display: inline-block;
+    background: #1b6b4a;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.nav-btn i {
+    margin-right: 8px;
+}
+
+.nav-btn:hover {
+    background: #064e3b;
+}
+
+/* ফুটার */
+.site-footer {
+    text-align: center;
+    color: #44614f;
+    font-size: 14px;
+    padding: 24px 12px 32px;
+}
+
+.site-footer p {
+    margin: 4px 0;
+}
+
+.site-footer a {
+    color: #1b6b4a;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.site-footer i {
+    color: #b8902c;
+    margin-right: 6px;
+}
+
+/* ===== API ডকস পেজ ===== */
+.docs {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+.docs-hero {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.docs-hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    color: #064e3b;
+}
+
+.docs-hero h1 i {
+    color: #b8902c;
+    margin-right: 8px;
+}
+
+.docs-hero p {
+    margin: 0 0 14px;
+    color: #44614f;
+}
+
+.docs-toc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.docs-toc a {
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #c5d3ca;
+    color: #064e3b;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.docs-toc a:hover {
+    background: #064e3b;
+    color: #fff;
+}
+
+.docs .panel {
+    line-height: 1.75;
+    color: #12281f;
+}
+
+.docs .panel h3 {
+    font-size: 17px;
+}
+
+.docs .panel h4 {
+    margin: 18px 0 6px;
+    font-size: 15px;
+    color: #064e3b;
+}
+
+.docs .panel p {
+    margin: 0 0 10px;
+}
+
+.docs code {
+    background: #eef4f0;
+    color: #064e3b;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.docs-list {
+    margin: 0;
+    padding-left: 22px;
+}
+
+.docs-list li {
+    margin-bottom: 6px;
+}
+
+.note {
+    background: #fbf5e3;
+    border-left: 4px solid #b8902c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+.note i {
+    color: #b8902c;
+    margin-right: 6px;
+}
+
+/* কোড বক্স */
+.code {
+    position: relative;
+    margin: 8px 0 12px;
+}
+
+.code pre {
+    margin: 0;
+    background: #0b2a22;
+    color: #e6f4ec;
+    border-radius: 12px;
+    padding: 16px;
+    overflow-x: auto;
+    max-height: 420px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+}
+
+.code pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+}
+
+.copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .14);
+    color: #fff;
+}
+
+.copy:hover {
+    background: rgba(255, 255, 255, .28);
+}
+
+.copy i {
+    margin-right: 5px;
+}
+
+/* এন্ডপয়েন্ট কার্ড */
+.ep {
+    border: 1px solid #dbe6df;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: #fbfdfc;
+}
+
+.ep-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.ep-head code {
+    font-size: 15px;
+    background: #e3ece6;
+}
+
+.ep-head code i {
+    color: #b8902c;
+    font-style: normal;
+}
+
+.badge {
+    background: #1fa855;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 3px 9px;
+}
+
+.try {
+    padding: 7px 14px;
+    font-size: 13px;
+    border-radius: 8px;
+    background: #075c46;
+}
+
+.try i {
+    margin-right: 6px;
+}
+
+/* টেবিল */
+.table-wrap {
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+
+.docs table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.docs th,
+.docs td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid #e3ece6;
+    vertical-align: top;
+}
+
+.docs th {
+    background: #eef4f0;
+    color: #064e3b;
+    font-weight: 600;
+}
+
+/* ড্রপডাউন (details) */
+.docs details {
+    border: 1px solid #dbe6df;
+    border-radius: 12px;
+    padding: 0 14px;
+    margin-bottom: 8px;
+}
+
+.docs summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 10px 0;
+    color: #064e3b;
+}
+
+/* লাইভ টেস্ট */
+.url-input {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    min-width: 200px;
+}
+
+.t-status {
+    min-height: 20px;
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #44614f;
+}
+.darkBox{
+    height: 100vh;
+    width: 100%;
+    background-color: #1111112f;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.popup{
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    width: 340px;
+}
+.popup>input{
+    width: 300px;
+    padding: 10px;
+    margin: 5px;
+}
+.inbtn{
+    width: 90%;
+}
+.w100{
+    width: 100%;
+}
+#url{
+    color: #b8902c;
+    border: 1px solid #b8902c;
+    padding: 8px 15px 8px 15px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width: 720px) {
+    .docs-hero h1 {
+        font-size: 22px;
+    }
+
+    .nav-logo h2 {
+        font-size: 18px;
+    }
+    .container{
+        flex-direction: column;
+    }
+    .container .stp{
+        width: 94%;
+    }
 }

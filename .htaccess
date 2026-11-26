@@ -1,2 +1,6 @@
 RewriteEngine On
+
+RedirectMatch 404 /\.git
+
 RewriteRule ^api\.json$ api/index.php [L,QSA]
+RewriteRule ^api/?$ api/index.php [L,QSA]

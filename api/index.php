@@ -2,14 +2,16 @@
 /*
   api.php
   ───────────────────────────────────────────────
-  api.php                → random ১টা আয়াত (reload দিলেই বদলায়)
-  api.php?id=100         → ১০০ নম্বর আয়াত
-  api.php?ayat=5         → প্রথম ৫টা আয়াত (page 1)
-  api.php?ayat=5&p=2     → পরের ৫টা আয়াত (৬–১০)
-  api.php?f=120&t=200    → ১২০ থেকে ২০০ পর্যন্ত সব (দুটোই সহ)
-  (api.json দিয়েও চলবে, .htaccess থাকলে)
+  /api                   → random ১টা আয়াত (reload দিলেই বদলায়)
+  /api?id=100            → ১০০ নম্বর আয়াত (১–৬২৩৬)
+  /api?sura=5            → ৫ নম্বর সূরার সব আয়াত
+  /api?sura=5&ayat=10    → ৫ নম্বর সূরার ১০ নম্বর আয়াত
+  /api?f=120&t=200       → id ১২০ থেকে ২০০ পর্যন্ত সব (দুটোই সহ)
 
-  অগ্রাধিকার: f/t  >  ayat/p  >  id  >  random
+  অগ্রাধিকার: f/t  >  sura(+ayat)  >  id  >  random
+
+  প্রতিটা আয়াতের ফরম্যাট:
+  { id, suara_no, sura, ayat_no, ayat_bangla, ayat_bangla_u, ayat_arbic }
 */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -19,8 +21,6 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
-
-const MAX_PER_PAGE = 500;   // ?ayat= এর সর্বোচ্চ সংখ্যা
 
 function out($data, $code = 200) {
     http_response_code($code);
@@ -35,7 +35,9 @@ function int_param($key) {
 }
 
 function clean($row) {
-    $row['ayat_Arbinc'] = ltrim($row['ayat_Arbinc'], "\xEF\xBB\xBF"); // BOM মুছে ফেলা
+    foreach (['ayat_arbic', 'ayat_bangla', 'ayat_bangla_u'] as $k) {
+        if (isset($row[$k])) $row[$k] = ltrim($row[$k], "\xEF\xBB\xBF"); // BOM মুছে ফেলা
+    }
     return $row;
 }
 
@@ -52,11 +54,11 @@ if ((int)$all[0]['id'] !== 1 || (int)$all[$total - 1]['id'] !== $total) {
     usort($all, fn($a, $b) => $a['id'] <=> $b['id']);
 }
 
-$f = int_param('f'); $t = int_param('t');
-$n = int_param('ayat'); $p = int_param('p');
+$f = int_param('f');       $t = int_param('t');
+$sura = int_param('sura'); $ayat = int_param('ayat');
 $id = int_param('id');
 
-/* ── ১) f ও t : range ── */
+/* ── ১) f ও t : id range ── */
 if (isset($_GET['f']) || isset($_GET['t'])) {
     if ($f === false || $t === false) out(['error' => 'f ও t সংখ্যা হতে হবে'], 400);
     $f = $f ?? 1;
@@ -68,25 +70,29 @@ if (isset($_GET['f']) || isset($_GET['t'])) {
     out(['from' => $f, 'to' => $t, 'count' => count($data), 'data' => $data]);
 }
 
-/* ── ২) ayat ও p : pagination ── */
-if (isset($_GET['ayat']) || isset($_GET['p'])) {
-    if ($n === false || $p === false) out(['error' => 'ayat ও p সংখ্যা হতে হবে'], 400);
-    $n = $n ?? 10;
-    $p = $p ?? 1;
-    if ($n < 1 || $n > MAX_PER_PAGE) out(['error' => 'ayat ১ থেকে ' . MAX_PER_PAGE . ' এর মধ্যে হতে হবে'], 400);
-    $pages = (int)ceil($total / $n);
-    if ($p < 1 || $p > $pages) out(['error' => "p অবশ্যই ১ থেকে $pages এর মধ্যে হতে হবে"], 404);
+/* ── ২) sura ও ayat ── */
+if (isset($_GET['sura']) || isset($_GET['ayat'])) {
+    if (!isset($_GET['sura'])) out(['error' => 'ayat দিতে হলে sura নম্বরও দিতে হবে (যেমন ?sura=5&ayat=10)'], 400);
+    if ($sura === false || $sura < 1 || $sura > 114) out(['error' => 'sura অবশ্যই ১ থেকে ১১৪ এর মধ্যে হতে হবে'], 404);
+    if ($ayat === false) out(['error' => 'ayat সংখ্যা হতে হবে'], 400);
 
-    $data = array_map('clean', array_slice($all, ($p - 1) * $n, $n));
+    $rows = array_values(array_filter($all, fn($r) => (int)$r['suara_no'] === $sura));
+    $count = count($rows);
+
+    // ?sura=5&ayat=10 → ওই সূরার ১০ নম্বর আয়াত
+    if ($ayat !== null) {
+        if ($ayat < 1 || $ayat > $count) {
+            out(['error' => "সূরা $sura এ আয়াত আছে ১ থেকে $count পর্যন্ত"], 404);
+        }
+        out(clean($rows[$ayat - 1]));
+    }
+
+    // ?sura=5 → পুরো সূরা
     out([
-        'page'        => $p,
-        'per_page'    => $n,
-        'total_pages' => $pages,
-        'total'       => $total,
-        'count'       => count($data),
-        'next_page'   => $p < $pages ? $p + 1 : null,
-        'prev_page'   => $p > 1 ? $p - 1 : null,
-        'data'        => $data,
+        'suara_no' => $sura,
+        'sura'     => $rows[0]['sura'],
+        'count'    => $count,
+        'data'     => array_map('clean', $rows),
     ]);
 }
 

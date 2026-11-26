@@ -1,2 +1,11 @@
 RewriteEngine On
-RewriteRule ^api\.json$ api.php [L,QSA]
+
+# .git ফোল্ডার যেন কেউ ব্রাউজারে খুলতে না পারে
+RedirectMatch 404 /\.git
+
+# /api  এবং  /api.json  দুটোই API চালাবে
+RewriteRule ^api\.json$ api/index.php [L,QSA]
+RewriteRule ^api/?$ api/index.php [L,QSA]
+
+# /docs  →  docs.php
+RewriteRule ^docs/?$ docs.php [L]
