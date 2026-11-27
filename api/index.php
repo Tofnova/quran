@@ -103,6 +103,21 @@ if (isset($_GET['id'])) {
     }
     out(clean($all[$id - 1]));
 }
+// All Lisy 
+if (isset($_GET['list'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Access-Control-Allow-Origin: *');
+
+    $all  = json_decode(file_get_contents(__DIR__ . '/../quran.json'), true); // path ঠিক করে নিও
+    $list = [];
+    foreach ($all as $r) {
+        $n = (int)$r['suara_no'];
+        if (!isset($list[$n])) $list[$n] = ['no' => $n, 'sura' => $r['sura'], 'count' => 0];
+        $list[$n]['count']++;
+    }
+    echo json_encode(array_values($list), JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 /* ── ৪) কিছু না দিলে : random ── */
 out(clean($all[random_int(0, $total - 1)]));

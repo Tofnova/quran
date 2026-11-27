@@ -1,9 +1,18 @@
 /* ================= Config ================= */
 const host = window.location.origin;
 const API = host + "/api?id=";
-const WATERMARK = localStorage.getItem("userName");   // https:// ছাড়া শুধু ডোমেইন দেখাবে
+const WATERMARK = localStorage.getItem("userName") || "";
 const TOTAL = 6236;
 document.getElementById('url').innerHTML = window.location.host;
+
+// শেষ দেখা আয়াত রিস্টোর (শুধু যখন URL-এ #hash নেই) — hashchange ফায়ার হয় না
+(function restoreHash() {
+    const ii = localStorage.getItem("ii");
+    if (!location.hash && ii && /^#\d+$/.test(ii)) {
+        history.replaceState(null, "", location.pathname + location.search + ii);
+    }
+})();
+
 const THEMES = {
     emerald: { n: "এমারেল্ড গোল্ড", bg: "radial-gradient(circle at 50% 18%,rgba(255,255,255,.10),transparent 55%),linear-gradient(160deg,#075e47,#0b2a22 62%,#050f0b)", text: "#ffffff", sub: "#d3ebdf", accent: "#e8c862", pill: "rgba(0,0,0,.22)", sw: "linear-gradient(135deg,#075e47,#e8c862)" },
     midnight: { n: "মিডনাইট ব্লু", bg: "radial-gradient(circle at 50% 18%,rgba(147,197,253,.14),transparent 55%),linear-gradient(160deg,#16275a,#0c1533 62%,#050913)", text: "#ffffff", sub: "#d6e4ff", accent: "#9cc7ff", pill: "rgba(0,0,0,.25)", sw: "linear-gradient(135deg,#16275a,#9cc7ff)" },
@@ -84,7 +93,7 @@ async function waitFonts() {
             document.fonts.load(`40px "${S.arFont}"`, $("arabic").textContent),
             document.fonts.load(`700 30px "${S.arFont}"`, $("arabic").textContent),
             document.fonts.load(`30px "${S.bnFont}"`, $("bangla").textContent || "অআক"),
-            document.fonts.load(`600 26px Cinzel`, WATERMARK)
+            document.fonts.load(`600 26px Cinzel`, WATERMARK || "A")
         ]);
         await document.fonts.ready;
     } catch (e) { }
@@ -110,7 +119,7 @@ async function render() {
         $("title").textContent = "কুরআনের আয়াত";
         $("arabic").textContent = d.ayat_arbic || "";
         $("bangla").textContent = d.ayat_bangla || "";
-        document.getElementById('banglaedit').value=d.ayat_bangla;
+        document.getElementById('banglaedit').value = d.ayat_bangla;
         $("ref").textContent = refText(d);
     }
     $("wm").textContent = WATERMARK;
@@ -120,15 +129,16 @@ async function render() {
     fitText();
     scaleStage();
 }
-function banclacng(){
+function banclacng() {
     const banglaedit = document.getElementById('banglaedit').value;
-    $("bangla").textContent= banglaedit;
+    $("bangla").textContent = banglaedit;
 }
 
 /* ================= Data ================= */
 async function loadAyat() {
     S.id = getAyatID();
     $("idInput").value = S.id;
+    syncSelects(S.id);
     $("arabic").textContent = "লোড হচ্ছে...";
     $("bangla").textContent = "";
     $("ref").textContent = "";
@@ -237,9 +247,61 @@ $("idInput").addEventListener("keydown", e => { if (e.key === "Enter") gotoAyat(
 window.addEventListener("hashchange", loadAyat);
 window.addEventListener("resize", scaleStage);
 
+/* ================= Sura / Ayat select ================= */
+const suraSelect = $("suraSelect"), ayatSelect = $("ayatSelect");
+const ayatPh = '<option value=""> ------ আয়াত সিলেক্ট করুন ------ </option>';
+let SURAS = [];   // [{no, sura, count, start}] — start = আগের সব সূরার আয়াত যোগফল
+let filledSura = null;   // আয়াত লিস্ট শেষবার কোন সূরার জন্য ভরা হয়েছে
+
+function fillAyat(no) {
+    const s = SURAS.find(x => x.no == no);
+    let html = ayatPh;
+    if (s) for (let a = 1; a <= s.count; a++) html += `<option value="${a}">আয়াত ${toBn(a)}</option>`;
+    ayatSelect.innerHTML = html;
+    filledSura = s ? s.no : null;
+}
+
+function syncSelects(id) {
+    const s = SURAS.find(x => id > x.start && id <= x.start + x.count);
+    if (!s) return;
+    suraSelect.value = s.no;
+    if (filledSura !== s.no) fillAyat(s.no);   // সূরা বদলালেই আয়াত লিস্ট নতুন করে ভরবে
+    ayatSelect.value = id - s.start;
+}
+
+async function loadSuras() {
+    try {
+        const res = await fetch(host + "/api?list");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const list = await res.json();
+        let start = 0;
+        SURAS = list.map(s => { const o = { ...s, start }; start += s.count; return o; });
+        suraSelect.innerHTML += SURAS.map(
+            s => `<option value="${s.no}">${toBn(s.no)}. ${s.sura} (${toBn(s.count)})</option>`
+        ).join("");
+        syncSelects(S.id);
+    } catch (e) {
+        suraSelect.innerHTML = '<option value="">সূরা লোড করা যায়নি</option>';
+    }
+}
+
+// সূরা সিলেক্ট করলে ওই সূরার ১ নম্বর আয়াতে যাবে
+suraSelect.onchange = () => {
+    const s = SURAS.find(x => x.no == suraSelect.value);
+    if (s) gotoAyat(s.start + 1);
+};
+// আয়াত সিলেক্ট করলে সরাসরি সেই আয়াতে যাবে
+ayatSelect.onchange = () => {
+    const s = SURAS.find(x => x.no == suraSelect.value);
+    if (s && ayatSelect.value) gotoAyat(s.start + Number(ayatSelect.value));
+};
+
+/* ================= Init ================= */
 applyTheme(); applyRatio(); applyFonts(); scaleStage();
 loadAyat();
+loadSuras();
 
+/* ================= Name popup ================= */
 const popup = document.getElementById("popup");
 const input = document.getElementById("name");
 
@@ -274,9 +336,7 @@ input.addEventListener("input", () => input.classList.remove("error"));
 input.addEventListener("keydown", e => { if (e.key === "Enter") savename(); });
 
 checkName();
-function saveoldhash() {
-    const myhsash = window.location.hash;
-    localStorage.setItem("ii", myhsash);
-}
 
- window.location.href=window.location.origin+localStorage.getItem("ii");
+function saveoldhash() {
+    localStorage.setItem("ii", window.location.hash);
+}

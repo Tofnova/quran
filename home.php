@@ -52,7 +52,17 @@
   <div class="stp">
     <!-- Navigation -->
     <div class="panel">
-      <h3><i class="fa-solid fa-book-quran"></i>আয়াত নম্বর (১ – ৬২৩৬)</h3>
+      <h3><i class="fa-solid fa-book-quran"></i>সূরা নম্বর (১ - ১১৪)</h3>
+      <div class="row">
+        <select id="suraSelect">
+          <option value=""> ------ সূরা সিলেক্ট করুন ------ </option>
+        </select>
+        <select id="ayatSelect">
+          <option value=""> ------ আয়াত সিলেক্ট করুন ------ </option>
+        </select>
+
+      </div>
+      <h3 style="margin-top:10px"><i class="fa-solid fa-book-quran"></i>আয়াত নম্বর (১ – ৬২৩৬)</h3>
       <div class="row">
         <button class="chip" id="prev"><i class="fa-solid fa-chevron-left"></i>আগের</button>
         <input type="number" id="idInput" min="1" max="6236" value="1">
