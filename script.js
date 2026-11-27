@@ -1,9 +1,9 @@
 /* ================= Config ================= */
 const host = window.location.origin;
 const API = host + "/api?id=";
-const WATERMARK = localStorage.getItem("name");   // https:// ছাড়া শুধু ডোমেইন দেখাবে
+const WATERMARK = localStorage.getItem("userName");   // https:// ছাড়া শুধু ডোমেইন দেখাবে
 const TOTAL = 6236;
-document.getElementById('url').innerHTML=window.location.host;
+document.getElementById('url').innerHTML = window.location.host;
 const THEMES = {
     emerald: { n: "এমারেল্ড গোল্ড", bg: "radial-gradient(circle at 50% 18%,rgba(255,255,255,.10),transparent 55%),linear-gradient(160deg,#075e47,#0b2a22 62%,#050f0b)", text: "#ffffff", sub: "#d3ebdf", accent: "#e8c862", pill: "rgba(0,0,0,.22)", sw: "linear-gradient(135deg,#075e47,#e8c862)" },
     midnight: { n: "মিডনাইট ব্লু", bg: "radial-gradient(circle at 50% 18%,rgba(147,197,253,.14),transparent 55%),linear-gradient(160deg,#16275a,#0c1533 62%,#050913)", text: "#ffffff", sub: "#d6e4ff", accent: "#9cc7ff", pill: "rgba(0,0,0,.25)", sw: "linear-gradient(135deg,#16275a,#9cc7ff)" },
@@ -39,6 +39,7 @@ function getAyatID() {
 function gotoAyat(n) {
     n = Math.min(TOTAL, Math.max(1, parseInt(n) || 1));
     if (location.hash === "#" + n) loadAyat(); else location.hash = n;
+    saveoldhash();
 }
 function patternURL(color) {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 90 90"><g fill="none" stroke="${color}" stroke-width="1.2" stroke-opacity=".16"><rect x="22" y="22" width="46" height="46"/><rect x="22" y="22" width="46" height="46" transform="rotate(45 45 45)"/><circle cx="45" cy="45" r="9"/></g></svg>`;
@@ -109,6 +110,7 @@ async function render() {
         $("title").textContent = "কুরআনের আয়াত";
         $("arabic").textContent = d.ayat_arbic || "";
         $("bangla").textContent = d.ayat_bangla || "";
+        document.getElementById('banglaedit').value=d.ayat_bangla;
         $("ref").textContent = refText(d);
     }
     $("wm").textContent = WATERMARK;
@@ -117,6 +119,10 @@ async function render() {
     await waitFonts();
     fitText();
     scaleStage();
+}
+function banclacng(){
+    const banglaedit = document.getElementById('banglaedit').value;
+    $("bangla").textContent= banglaedit;
 }
 
 /* ================= Data ================= */
@@ -237,21 +243,20 @@ loadAyat();
 const popup = document.getElementById("popup");
 const input = document.getElementById("name");
 
-function getName(){
+function getName() {
     return (localStorage.getItem("userName") || "").trim();
 }
 
-function checkName(){
+function checkName() {
     if (getName()) {
         popup.style.display = "none";
-        document.title = getName();
     } else {
         popup.style.display = "flex";
         input.focus();
     }
 }
 
-function savename(){
+function savename() {
     const name = input.value.trim();
 
     if (name.length < 2) {
@@ -269,3 +274,9 @@ input.addEventListener("input", () => input.classList.remove("error"));
 input.addEventListener("keydown", e => { if (e.key === "Enter") savename(); });
 
 checkName();
+function saveoldhash() {
+    const myhsash = window.location.hash;
+    localStorage.setItem("ii", myhsash);
+}
+
+ window.location.href=window.location.origin+localStorage.getItem("ii");

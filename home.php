@@ -1,5 +1,20 @@
+<div class="darkBox" id="popup">
+  <div class="popup">
+    <br>
+    <span>Input your name</span><br>
+    <input id="name" type="text" placeholder="Your Name">
+    <br>
+    <div class="flex center medel">
+      <button onclick="savename()" class="inbtn">
+        Save
+      </button>
+    </div>
+    <small>
+      This name is a Photo , photocard and website title use! Do not use other way
+    </small>
+  </div>
+</div>
 <div class="container">
-
   <!-- Preview -->
   <div class="stp">
     <div class="stageWrap" id="stageWrap">
@@ -25,7 +40,7 @@
           </div>
           <div id="ref"></div>
           <div class="foot"><span class="line"></span><span class="wm" id="wm"></span><span class="line"></span></div>
-          <div class="flex beet w100">
+          <div class="flex beet w100x">
             <div></div>
             <div id="url"></div>
           </div>
@@ -49,10 +64,13 @@
 
     <!-- Style -->
     <div class="panel">
+
       <h3><i class="fa-solid fa-palette"></i>থিম</h3>
       <div class="row" id="themes"></div>
+
       <h3 style="margin-top:14px"><i class="fa-solid fa-expand"></i>ছবির সাইজ</h3>
       <div class="row" id="ratios"></div>
+
       <h3 style="margin-top:14px"><i class="fa-solid fa-font"></i>ফন্ট</h3>
       <div class="row">
         <select id="arFont" class="grow">
@@ -66,6 +84,12 @@
           <option value="Tiro Bangla">বাংলা: Tiro Bangla</option>
         </select>
       </div>
+
+      <h3 style="margin-top:14px"><i class="fa-regular fa-pen-to-square"></i>বাংলা সম্পদানা</h3>
+      <div class="row">
+        <textarea rows="12" name="textare" id="banglaedit" oninput="banclacng()"></textarea>
+      </div>
+
     </div>
 
     <!-- Share -->

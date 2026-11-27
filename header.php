@@ -44,7 +44,7 @@ $h = fn($s) => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
     <nav class="flex medel around">
         <a href="/" class="nav-logo flex medel w10">
             <img src="/asset/quran.png" alt="কুরআন API লোগো">
-            <h2>কুরআন API</h2>
+            <h2>আল কুরআন</h2>
         </a>
         <div>
             <?php if ($page === 'docs'): ?>
@@ -52,22 +52,7 @@ $h = fn($s) => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
             <?php else: ?>
                 <a class="nav-btn" href="/docs"><i class="fa-solid fa-code"></i>API ডকস</a>
             <?php endif; ?>
+             <a class="nav-btn" href="https://github.com/Tofnova/quran"><i class="fa-brands fa-github"></i></a>
         </div>
     </nav>
-    <div class="darkBox" id="popup">
-        <div class="popup">
-          <br>
-            <span>Input your name</span><br>
-            <input id="name" type="text" placeholder="Your Name">
-            <br>
-           <div class="flex center medel">
-             <button onclick="savename()" class="inbtn">
-                Save
-            </button>
-           </div>
-           <small>
-            This name is a Photo , photocard and website title use! Do not use other way
-           </small>
-        </div>
-    </div>
     <br><br><br><br><br>
