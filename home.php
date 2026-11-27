@@ -41,7 +41,7 @@
           <div id="ref"></div>
           <div class="foot"><span class="line"></span><span class="wm" id="wm"></span><span class="line"></span></div>
           <div class="flex beet w100x">
-            <div></div>
+            <div id="aid"></div>
             <div id="url"></div>
           </div>
         </div>

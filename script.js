@@ -49,7 +49,9 @@ function gotoAyat(n) {
     n = Math.min(TOTAL, Math.max(1, parseInt(n) || 1));
     if (location.hash === "#" + n) loadAyat(); else location.hash = n;
     saveoldhash();
+    document.getElementById('aid').innerText = window.location.hash;
 }
+document.getElementById('aid').innerText = window.location.hash;
 function patternURL(color) {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 90 90"><g fill="none" stroke="${color}" stroke-width="1.2" stroke-opacity=".16"><rect x="22" y="22" width="46" height="46"/><rect x="22" y="22" width="46" height="46" transform="rotate(45 45 45)"/><circle cx="45" cy="45" r="9"/></g></svg>`;
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
